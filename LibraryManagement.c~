@@ -1,0 +1,237 @@
+/*Make a struct with user's names and borrowed books
+Make a struct with book author, title, release year and status
+Make a function add books
+another to remove books
+and a last one to assign borrowed books to a user
+*/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <windows.h>
+
+typedef struct{
+char name[50], borrowed[3][50];
+}ArrayUsers;
+
+typedef struct{
+char author[50], title[50], status[10];;
+int year;
+}Library;
+
+void remove_book(Library Books[], int size){
+char title[50];
+int found = 0;
+
+printf("What's the name of the book you wanna remove?\n");
+scanf("%s", &title);
+
+for (int i = 0; i < size; i++){
+    if(strcmp(Books[i].title, title) == 0){
+        int index = i;
+    for(int j = index; j < size - 1; j++){
+    Books[i] = Books[i + 1];
+    found = 1;}}
+}
+if(!found){
+        printf("Book wasn't found.\n");}
+}
+
+void add_book(Library Books[],  int size){
+    char title[50], author[50], status[10];
+    int year, found = 0;
+
+    printf("What's the title of the book you wanna add?\n");
+    scanf("%s", &title);
+
+    for(int i = 0; i < size; i++){
+        if(strcmp(title, Books[i].title) == 0){
+            printf("Book is alredy in list");
+            found = 1;
+        }
+    }
+    if (!found){
+    printf("What's the author's name?\n");
+    scanf("%s", &author);
+    printf("What's the year of release?\n");
+    scanf("%d", &year);
+
+    strcpy(Books[size - 1].title,  title);
+    strcpy(Books[size - 1].author, author);
+    Books[size - 1].year = year;
+    strcpy(Books[size - 1].status , "Available");}
+}
+
+void add_user(ArrayUsers Users[], int size){
+    char name[50], borrowed[3][50];
+    int found = 0;
+    printf("What's the name of the user?\n");
+    fgets(name, 50, stdin);
+    name[strlen(name) - 1] = "\0";
+
+    for(int i = 0; i < size; i++){
+        if(strcmp(Users[i].name, name) == 0){
+            printf("User is already in list.\n");
+            found = 1;
+        }
+        if(!found){
+            strcpy(Users[size - 1].name, name):;
+            strcpy(Users[size - 1].borrowed, "No books borrowed");}
+    }
+} 
+
+
+void remove_user(ArrayUsers Users[], int size){
+    char name[50];
+    int found = 0;
+    
+    for(int i = 0; i < size; i++){
+        if(strcmp(Users[i].name, name) == 0){
+            found = 1;
+            for(int j = i; j < size; j++){
+            Users[i] = Users[i + 1];}
+}
+}
+}
+
+
+void borrow_book(Library Books[], ArrayUsers Users[], int size, ArrayUsers CurrentUser){
+char title[50];
+
+	
+    for(int i = 0; i < size; i++){
+    if(CurrentUser != NULL){
+        printf("What book do you wanna borrow?\n");
+        scanf("%s", title);}
+}
+
+    for(int i = 0; i < size; i++){
+    if(strcmp(Books[i].status, "Available") == 0 && strcmp(Books[i].title, title) == 0)
+    strcpy(Books[i].title, Users[i].borrowed);}
+}
+
+
+void return_book(Library Books[], ArrayUsers Users[], int size, ArrayUsers CurrentUser){
+    int found = 0;
+    char title[50];
+
+    printf("What book do you wanna return?\n");
+    scanf("%s", title);
+
+    for(int i = 0; i = size; i++){
+    if(strcmp(Books[i].title, title) == 0){
+        if(strcmp(CurrentUser.borrowed, title) == 0){
+        strcpy(CurrentUser.borrowed, "");
+        strcpy(Books[i].status, "Available");}
+        else{printf("User didn't borrow this book.\n");}}
+    }
+}
+
+void print_books(Library Books[], int size){
+    if (size == 0){
+        printf("Library is empty.\n");}
+    for(int i = 0; i < size; i++){
+        printf("\nAuthor: %s Title: %s\n" 
+        "Status: %s Year: %d",
+        Books[i].author, Books[i].title, Books[i].status, Books[i].year);}
+    Sleep(3000);
+}
+
+void print_users(ArrayUsers Users[], int size){
+    if (size == 0){
+        printf("User list is empty.\n");}
+    for(int i = 0; i < size; i++){
+        printf("Username: %s Borrowed books: %s\n",
+        Users[i].name, Users[i].borrowed);}
+    Sleep(3000);
+}
+
+void choose_user(ArrayUsers Users[], ArrayUsers CurrentUser, int size){
+    char name[50];
+    printf("What's your username?\n");
+    scanf("%s", name);
+
+    for(int i = 0; i < size; i++){
+        if(strcmp(Users[i].name, name) == 0){
+            strcpy(CurrentUser.name, Users[i].name);
+            strcpy(CurrentUser.borrowed, Users[i].borrowed);
+        }else{("You're not a user. Please make an account before borrowing.\n");}}
+}
+
+int main(){
+    Library *Books = NULL;
+    ArrayUsers *Users = NULL;
+    int num_books = 0;
+    int num_users = 0;
+    int choice;
+    ArrayUsers CurrentUser = {"Sol", "No books borrowed"};
+
+    printf("Welcome to the library %s, please stay quiet,"
+    " people are reading.\n", CurrentUser.name);
+
+    do{;printf("\n\nMenu: Choose an option.\n"
+    "1. Add book.\n2. Remove book.\n3. Add user.\n4. Remove user.\n" 
+    "5. Choose user\n6. Return book.\n7. Borrow book.\n" 
+    "8. See all users\n9. See all books.\n10. quit.\n");
+    scanf("%d", &choice);
+
+        if(choice == 1){
+            num_books++;
+            Books = realloc(Books, num_books * sizeof(Library));
+
+        if (Books == NULL){
+            printf("Memory allocation failed.\n");}
+
+            add_book(Books, num_books);
+}
+   else if(choice == 2){
+        num_books--;
+        Books = realloc(Books, num_books * sizeof(Library));
+
+    if (Books == NULL){
+            printf("Memory allocation failed.\n");}
+
+            remove_book(Books, num_books);
+    }
+    else if(choice == 3){
+        num_users++;
+        Users = realloc(Users, num_users * sizeof(ArrayUsers));
+
+        if (Users == NULL){
+            printf("Memory allocation failed.\n");}
+
+        add_user(Users, num_users);
+    }
+    else if(choice == 4){
+        num_users--;
+        Users = realloc(Users, num_users * sizeof(ArrayUsers));
+        
+        if(Users == NULL){
+            printf("Memory allocation failed.\n");}
+
+        remove_user(Users, num_users);
+    }
+    else if(choice == 5){
+        choose_user(Users, CurrentUser, num_users);
+    }
+    else if(choice == 6){
+        remove_book(Books, num_books, CurrentUser);
+    }
+    else if(choice == 7){
+        borrow_book(Books, Users, num_books, CurrentUser);
+        }
+    else if(choice == 8){
+        print_users(Users, num_users);
+    }
+    else if(choice == 9){
+        print_books(Books, num_books);
+    }
+    else if(choice != 10){
+        printf("Invalid choice.\n");
+    }
+}while (choice != 10);
+free(Users);
+free(Books);
+printf("Goodbye.");
+
+    return 0;
+}
